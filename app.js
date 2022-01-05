@@ -59,9 +59,9 @@ app.get("/", function(req, res) {
           console.log("Successfully savevd default items to DB.");
         }
       });
-      res.redirect("/");
+      res.redirect("/");  // Redirect to home page
     } else {
-      res.render("list", {listTitle: "Today", newListItems: foundItems});
+      res.render("list", {listTitle: "Today", newListItems: foundItems});  // Render list
     }
   });
 
@@ -95,9 +95,11 @@ app.get("/:customListName", function(req, res){
 //Set up POST route
 app.post("/", function(req, res){
 
+  // Get values from body
   const itemName = req.body.newItem;
   const listName = req.body.list;
 
+  // Create new Item object
   const item = new Item({
     name: itemName
   });
@@ -134,10 +136,6 @@ app.post("/delete", function(req, res){
   }
 
 
-});
-
-app.get("/about", function(req, res){
-  res.render("about");
 });
 
 let port = process.env.PORT;
