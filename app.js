@@ -1,18 +1,21 @@
 //jshint esversion:6
 
+//Required modules
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const _ = require("lodash");
 
+
+//Create app constant with Express
 const app = express();
 
 app.set('view engine', 'ejs');
 
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.static("public"));
+app.use(bodyParser.urlencoded({extended: true}));  //Use bodyParser to read the body
+app.use(express.static("public"));  //use static function of Express to use static folder
 
-mongoose.connect("mongodb+srv://admin-kaylee:N1ch0l45P4g3@cluster0.aob4f.mongodb.net/todolistDB", {useNewUrlParser: true});
+mongoose.connect("mongodb+srv://admin-YOUR_USERNAME:YOUR_PASSWORD@cluster0.aob4f.mongodb.net/todolistDB", {useNewUrlParser: true});
 
 const itemsSchema = {
   name: String
@@ -42,7 +45,7 @@ const listSchema = {
 
 const List = mongoose.model("List", listSchema);
 
-
+//Set up GET request using home route
 app.get("/", function(req, res) {
 
   Item.find({}, function(err, foundItems){
@@ -88,6 +91,7 @@ app.get("/:customListName", function(req, res){
 
 });
 
+//Set up POST route
 app.post("/", function(req, res){
 
   const itemName = req.body.newItem;
