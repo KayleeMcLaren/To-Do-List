@@ -16,15 +16,16 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));  //Use bodyParser to read the body
 app.use(express.static("public"));  //use static function of Express to use static folder
 
+// Create a database inside MongoDb
 mongoose.connect("mongodb+srv://admin-YOUR_USERNAME:YOUR_PASSWORD@cluster0.aob4f.mongodb.net/todolistDB", {useNewUrlParser: true});
 
+// Create a Mongoose Schema called Item
 const itemsSchema = {
   name: String
 };
+const Item = mongoose.model("Item", itemsSchema); 
 
-const Item = mongoose.model("Item", itemsSchema);
-
-
+// Create Item documents
 const item1 = new Item({
   name: "Welcome to your todolist!"
 });
@@ -37,26 +38,29 @@ const item3 = new Item({
   name: "<-- Hit this to delete an item."
 });
 
+// Store Item documents in defaultItems array
 const defaultItems = [item1, item2, item3];
 
+
+// Create a new Mongoose Schema called List
 const listSchema = {
   name: String,
   items: [itemsSchema]
 };
-
 const List = mongoose.model("List", listSchema);
+
 
 //Set up GET request using home route
 app.get("/", function(req, res) {
 
-  Item.find({}, function(err, foundItems){
+  Item.find({}, function(err, foundItems){  // Find everything in foundItems
 
-    if (foundItems.length === 0) {
+    if (foundItems.length === 0) {  //
       Item.insertMany(defaultItems, function(err){
         if (err) {
           console.log(err);
         } else {
-          console.log("Successfully savevd default items to DB.");
+          console.log("Successfully savevd default items to DB."); 
         }
       });
       res.redirect("/");  // Redirect to home page
