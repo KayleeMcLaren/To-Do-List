@@ -55,22 +55,24 @@ app.get("/", function(req, res) {
 
   Item.find({}, function(err, foundItems){  // Find everything in foundItems
 
-    if (foundItems.length === 0) {  //
+    if (foundItems.length === 0) {  // If foundItems is empty, then insert deafultItems
       Item.insertMany(defaultItems, function(err){
         if (err) {
           console.log(err);
         } else {
-          console.log("Successfully savevd default items to DB."); 
+          console.log("Successfully saved default items to DB."); 
         }
       });
       res.redirect("/");  // Redirect to home page
-    } else {
-      res.render("list", {listTitle: "Today", newListItems: foundItems});  // Render list
+    } else {  
+      res.render("list", {listTitle: "Today", newListItems: foundItems});  // If foundItems is not empty, render list.ejs
     }
   });
 
 });
 
+
+//Set up GET request for custom list names
 app.get("/:customListName", function(req, res){
   const customListName = _.capitalize(req.params.customListName);
 
@@ -86,7 +88,6 @@ app.get("/:customListName", function(req, res){
         res.redirect("/" + customListName);
       } else {
         //Show an existing list
-
         res.render("list", {listTitle: foundList.name, newListItems: foundList.items});
       }
     }
@@ -96,7 +97,7 @@ app.get("/:customListName", function(req, res){
 
 });
 
-//Set up POST route
+//Set up POST route to add new items to list
 app.post("/", function(req, res){
 
   // Get values from body
@@ -110,7 +111,7 @@ app.post("/", function(req, res){
 
   if (listName === "Today"){
     item.save();
-    res.redirect("/");
+    res.redirect("/");  
   } else {
     List.findOne({name: listName}, function(err, foundList){
       foundList.items.push(item);
@@ -120,6 +121,8 @@ app.post("/", function(req, res){
   }
 });
 
+
+//Set up POST route to delete items from list
 app.post("/delete", function(req, res){
   const checkedItemId = req.body.checkbox;
   const listName = req.body.listName;
@@ -142,9 +145,10 @@ app.post("/delete", function(req, res){
 
 });
 
+// Set port as a dynamic port
 let port = process.env.PORT;
 if (port == null || port == "") {
-  port = 3000;
+  port = 3000;  // if port is empty, port will equal 3000
 }
 
 app.listen(port, function() {
