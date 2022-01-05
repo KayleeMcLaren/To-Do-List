@@ -10,6 +10,7 @@ const _ = require("lodash");
 //Create app constant with Express
 const app = express();
 
+// Set view engine to EJS
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({extended: true}));  //Use bodyParser to read the body
